@@ -6,6 +6,8 @@
  * Hybrid KEM code.
  *
  */
+#include <stdio.h>
+#include <time.h>
 
 static OSSL_FUNC_kem_encapsulate_fn oqs_hyb_kem_encaps;
 static OSSL_FUNC_kem_decapsulate_fn oqs_hyb_kem_decaps;
@@ -15,6 +17,11 @@ static OSSL_FUNC_kem_decapsulate_fn oqs_hyb_kem_decaps;
 static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
                                       size_t *ctlen, unsigned char *secret,
                                       size_t *secretlen, int keyslot) {
+    //timing init
+    struct timespec start, end;
+    long _elapsed_ns = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    //end of time init
     int ret = OQS_SUCCESS, ret2 = 0;
 
     const PROV_OQSKEM_CTX *pkemctx = (PROV_OQSKEM_CTX *)vpkemctx;
@@ -69,7 +76,7 @@ static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
 
     ret = EVP_PKEY_derive_set_peer(ctx, peerpk);
     ON_ERR_SET_GOTO(ret <= 0, ret, -1, err);
-
+    
     ret = EVP_PKEY_derive(ctx, secret, &kexDeriveLen);
     ON_ERR_SET_GOTO(ret <= 0, ret, -1, err);
 
@@ -78,6 +85,13 @@ static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
                     ret, -1, err);
 
     memcpy(ct, ctkex_encoded, pkeylen);
+
+    //timing end
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
+                 (end.tv_nsec - start.tv_nsec);
+    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    printf("%s encaps time: %ld ns",_evp_name ? _evp_name : "unknown", elapsed_ns);
 
 err:
     EVP_PKEY_CTX_free(ctx);
@@ -92,6 +106,11 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
                                       size_t *secretlen,
                                       const unsigned char *ct, size_t ctlen,
                                       int keyslot) {
+    //timing init
+    struct timespec start, end;
+    long _elapsed_ns = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    //end of time init
     OQS_KEM_PRINTF("OQS KEM provider called: oqs_hyb_kem_decaps\n");
 
     int ret = OQS_SUCCESS, ret2 = 0;
@@ -143,6 +162,13 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
 
     ret = EVP_PKEY_derive(ctx, secret, &kexDeriveLen);
     ON_ERR_SET_GOTO(ret <= 0, ret, -9, err);
+
+    //timing end
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
+                 (end.tv_nsec - start.tv_nsec);
+    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    printf("%s decaps time: %ld ns",_evp_name ? _evp_name : "unknown", elapsed_ns);
 
 err:
     EVP_PKEY_free(peerpkey);

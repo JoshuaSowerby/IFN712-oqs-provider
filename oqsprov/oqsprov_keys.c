@@ -1233,6 +1233,7 @@ static int oqsx_key_gen_oqs(OQSX_KEY *key, int gen_kem) {
     oqsx_comp_set_idx(key, NULL, &idx_pq);
 
     if (gen_kem)
+    ///TO TIME or get size?
         return OQS_KEM_keypair(key->oqsx_provider_ctx.oqsx_qs_ctx.kem,
                                key->comp_pubkey[idx_pq],
                                key->comp_privkey[idx_pq]);

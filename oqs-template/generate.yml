@@ -1,486 +1,240 @@
-# This is the master document for ID interoperability for KEM IDs, p-hybrid KEM IDs, SIG (O)IDs
-# Next free plain KEM ID: 0x024D, p-hybrid: 0x2F4F, X-hybrid: 0x2FB9
-# Switch to using unassigned code points as per https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8:
-# Next free: 65027 (see https://github.com/open-quantum-safe/oqs-provider/issues/561)
+# sigs have not been changed
 kems:
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo640aes'
-    nid: '65024'
-    nid_hybrid: '65025'
-    oqs_alg: 'OQS_KEM_alg_frodokem_640_aes'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x25519"
-          nid: '65026'
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo640shake'
-    nid: '65027'
-    nid_hybrid: '65028'
-    oqs_alg: 'OQS_KEM_alg_frodokem_640_shake'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x25519"
-          nid: '65029'
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo976aes'
-    nid: '65030'
-    nid_hybrid: '65031'
-    oqs_alg: 'OQS_KEM_alg_frodokem_976_aes'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x448"
-          nid: '65032'
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo976shake'
-    nid: '65033'
-    nid_hybrid: '65034'
-    oqs_alg: 'OQS_KEM_alg_frodokem_976_shake'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x448"
-          nid: '65035'
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo1344aes'
-    nid: '65036'
-    nid_hybrid: '65037'
-    oqs_alg: 'OQS_KEM_alg_frodokem_1344_aes'
-    enable_kem: true
-  -
-    family: 'FrodoKEM'
-    name_group: 'frodo1344shake'
-    nid: '65038'
-    nid_hybrid: '65039'
-    oqs_alg: 'OQS_KEM_alg_frodokem_1344_shake'
-    enable_kem: true
-  -
-    family: 'BIKE'
-    name_group: 'bike1l1cpa'
-    bit_security: 128
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0206'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp256_r1
-          nid: '0x2F06'
-    oqs_alg: 'OQS_KEM_alg_bike1_l1_cpa'
-    enable_kem: false
-  -
-    family: 'BIKE'
-    name_group: 'bike1l3cpa'
-    bit_security: 192
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0207'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp384_r1
-          nid: '0x2F07'
-    oqs_alg: 'OQS_KEM_alg_bike1_l3_cpa'
-    enable_kem: false
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber512'
-    oid: '1.3.6.1.4.1.2.267.8.2.2'
-    oqs_alg: 'OQS_KEM_alg_kyber_512'
-    enable_kem: false
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023A'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp256_r1
-          nid: '0x2F3A'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x25519
-          nid: '0x2F39'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x020F'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp256_r1
-          nid: '0x2F0F'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: x25519
-          nid: '0x2F26'
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber768'
-    oid: '1.3.6.1.4.1.2.267.8.3.3'
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023C'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x448
-          nid: '0x2F90'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x25519
-          nid: '0x6399'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp256_r1
-          nid: '0x639A'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp384_r1
-          nid: '0x2F3C'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0210'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp384_r1
-          nid: '0x2F10'
-    oqs_alg: 'OQS_KEM_alg_kyber_768'
-    enable_kem: false
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber1024'
-    oid: '1.3.6.1.4.1.2.267.8.4.4'
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023D'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp521_r1
-          nid: '0x2F3D'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0211'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp521_r1
-          nid: '0x2F11'
-    oqs_alg: 'OQS_KEM_alg_kyber_1024'
-    enable_kem: false
-# end of IBM support section
-# NIST OIDs see https://csrc.nist.gov/projects/computer-security-objects-register/algorithm-registration
-# KEM prefix 2.16.840.1.101.3.4.4.
-  -
-    family: 'ML-KEM'
-    fips_standard: 1
-    name_group: 'mlkem512'
-# https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-    nid: '512'
-    iana: true
-# NIST kem 1
-    oid: '2.16.840.1.101.3.4.4.1'
-# code point not standardized: Why? XXX
-    nid_hybrid: '0x2F4B'
-# retain OIDs of the Legion of the BouncyCastle: XXX check if OK
-    hybrid_oid: '1.3.6.1.4.1.22554.5.7.1'
-    oqs_alg: 'OQS_KEM_alg_ml_kem_512'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x25519"
-# retain OIDs of the Legion of the BouncyCastle: XXX check if OK
-          hybrid_oid: '1.3.6.1.4.1.22554.5.8.1'
-# code point not standardized: Why? XXX
-          nid: '0x2FB6'
-          iana: true
-  -
-    family: 'ML-KEM'
-    fips_standard: 1
-    name_group: 'mlkem768'
-# https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-    nid: '513'
-    iana: true
-# NIST kem 2
-    oid: '2.16.840.1.101.3.4.4.2'
-# code point not standardized: Why? XXX
-    nid_hybrid: '0x2F4C'
-    oqs_alg: 'OQS_KEM_alg_ml_kem_768'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x448"
-# code point not standardized: Why? XXX
-          nid: '0x2FB7'
-        - hybrid_group: "x25519"
-# https://www.ietf.org/archive/id/draft-kwiatkowski-tls-ecdhe-mlkem-02.html#name-x25519mlkem768
-          nid: '0x11ec'
-          iana: true
-          standard_name: "X25519MLKEM768"
-        - hybrid_group: "secp256_r1"
-# https://www.ietf.org/archive/id/draft-kwiatkowski-tls-ecdhe-mlkem-02.html#name-secp256r1mlkem768
-          nid: '0x11eb'
-          iana: true
-          standard_name: "SecP256r1MLKEM768"
-  -
-    family: 'ML-KEM'
-    fips_standard: 1
-    name_group: 'mlkem1024'
-# https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-    nid: '514'
-    iana: true
-# NIST kem 3
-    oid: '2.16.840.1.101.3.4.4.3'
-# code point not standardized: Why? XXX
-    nid_hybrid: '0x2F4D'
-    oqs_alg: 'OQS_KEM_alg_ml_kem_1024'
-    enable_kem: true
-    extra_nids:
-      current:
-        # p384_mlkem1024 hybrid not fully standardized
-        # this oid is proposed by Tresorit
-        # if the hybrid combination is standardized, feel free to change it
-        - hybrid_group: "secp384_r1"
-# does Tresorit want to update?
-          hybrid_oid: '1.3.6.1.4.1.42235.6'
-# code point standardization proposal as per https://www.ietf.org/archive/id/draft-kwiatkowski-tls-ecdhe-mlkem-03.html
-          nid: '0x11ED'
-          iana: true
-          standard_name: "SecP384r1MLKEM1024"
-  -
-    family: 'BIKE'
-    name_group: 'bike1l1fo'
-    bit_security: 128
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0223'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp256_r1
-          nid: '0x2F23'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: "x25519"
-          nid: '0x2F28'
-    oqs_alg: 'OQS_KEM_alg_bike1_l1_fo'
-    enable_kem: false
-  -
-    family: 'BIKE'
-    name_group: 'bike1l3fo'
-    bit_security: 192
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0224'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp384_r1
-          nid: '0x2F24'
-    oqs_alg: 'OQS_KEM_alg_bike1_l3_fo'
-    enable_kem: false
-  -
-    family: 'BIKE'
-    name_group: 'bikel1'
-    implementation_version: '5.1'
-    nid: '65040'
-    nid_hybrid: '65041'
-    oqs_alg: 'OQS_KEM_alg_bike_l1'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x25519"
-          nid: '65042'
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x0238'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x25519
-          nid: '0x2F37'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp256_r1
-          nid: '0x2F38'
-  -
-    family: 'BIKE'
-    name_group: 'bikel3'
-    implementation_version: '5.1'
-    nid: '65043'
-    nid_hybrid: '65044'
-    oqs_alg: 'OQS_KEM_alg_bike_l3'
-    enable_kem: true
-    extra_nids:
-      current:
-        - hybrid_group: "x448"
-          nid: '65045'
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023B'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp384_r1
-          nid: '0x2F3B'
-  -
-    family: 'BIKE'
-    name_group: 'bikel5'
-    implementation_version: '5.1'
-    nid: '65046'
-    nid_hybrid: '65047'
-    oqs_alg: 'OQS_KEM_alg_bike_l5'
-    enable_kem: true
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber90s512'
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x0229'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp256_r1
-          nid: '0x2F29'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023E'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp256_r1
-          nid: '0x2F3E'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x25519
-          nid: '0x2FA9'
-    oqs_alg: 'OQS_KEM_alg_kyber_512_90s'
-    enable_kem: false
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber90s768'
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x022A'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp384_r1
-          nid: '0x2F2A'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x023F'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp384_r1
-          nid: '0x2F3F'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x448
-          nid: '0x2FAA'
-    oqs_alg: 'OQS_KEM_alg_kyber_768_90s'
-    enable_kem: false
-  -
-    family: 'CRYSTALS-Kyber'
-    name_group: 'kyber90s1024'
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          nid: '0x022B'
-        - implementation_version: NIST Round 2 submission
-          nist-round: 2
-          hybrid_group: secp521_r1
-          nid: '0x2F2B'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x0240'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp521_r1
-          nid: '0x2F40'
-    oqs_alg: 'OQS_KEM_alg_kyber_1024_90s'
-    enable_kem: false
-  -
-    family: 'HQC'
-    name_group: 'hqc128'
-    nid: '65048'
-    nid_hybrid: '65049'
-    oqs_alg: 'OQS_KEM_alg_hqc_128'
-    enable_kem: false
-    extra_nids:
-      current:
-        - hybrid_group: "x25519"
-          nid: '65050'
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x022C'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp256_r1
-          nid: '0x2F2C'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x25519
-          nid: '0x2FAC'
-  -
-    family: 'HQC'
-    name_group: 'hqc192'
-    nid: '65051'
-    nid_hybrid: '65052'
-    oqs_alg: 'OQS_KEM_alg_hqc_192'
-    enable_kem: false
-    extra_nids:
-      current:
-        - hybrid_group: "x448"
-          nid: '65053'
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x022D'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp384_r1
-          nid: '0x2F2D'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: x448
-          nid: '0x2FAD'
-  -
-    family: 'HQC'
-    name_group: 'hqc256'
-    nid: '65054'
-    nid_hybrid: '65055'
-    oqs_alg: 'OQS_KEM_alg_hqc_256'
-    enable_kem: false
-    extra_nids:
-      old:
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          nid: '0x022E'
-        - implementation_version: NIST Round 3 submission
-          nist-round: 3
-          hybrid_group: secp521_r1
-          nid: '0x2F2E'
+- family: FrodoKEM
+  name_group: frodo640shake
+  nid: '65030'
+  nid_hybrid: '65031'
+  oqs_alg: OQS_KEM_alg_frodokem_640_shake
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65032'
+    - hybrid_group: x448
+      nid: '65033'
+    - hybrid_group: secp521_r1
+      nid: '65034'
+    - hybrid_group: secp384_r1
+      nid: '65035'
+    - hybrid_group: secp256_r1
+      nid: '65036'
+- family: FrodoKEM
+  name_group: frodo976shake
+  nid: '65040'
+  nid_hybrid: '65041'
+  oqs_alg: OQS_KEM_alg_frodokem_976_shake
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65042'
+    - hybrid_group: x448
+      nid: '65043'
+    - hybrid_group: secp521_r1
+      nid: '65044'
+    - hybrid_group: secp384_r1
+      nid: '65045'
+    - hybrid_group: secp256_r1
+      nid: '65046'
+- family: FrodoKEM
+  name_group: frodo1344shake
+  nid: '65050'
+  nid_hybrid: '65051'
+  oqs_alg: OQS_KEM_alg_frodokem_1344_shake
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65052'
+    - hybrid_group: x448
+      nid: '65053'
+    - hybrid_group: secp521_r1
+      nid: '65054'
+    - hybrid_group: secp384_r1
+      nid: '65055'
+    - hybrid_group: secp256_r1
+      nid: '65056'
+- family: ML-KEM
+  fips_standard: 1
+  name_group: mlkem512
+  nid: '65060'
+  iana: true
+  oid: 2.16.840.1.101.3.4.4.1
+  nid_hybrid: '65061'
+  hybrid_oid: 1.3.6.1.4.1.22554.5.7.1
+  oqs_alg: OQS_KEM_alg_ml_kem_512
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      hybrid_oid: 1.3.6.1.4.1.22554.5.8.1
+      nid: '65062'
+      iana: true
+    - hybrid_group: x448
+      nid: '65063'
+    - hybrid_group: secp521_r1
+      nid: '65064'
+    - hybrid_group: secp384_r1
+      nid: '65065'
+    - hybrid_group: secp256_r1
+      nid: '65066'
+- family: ML-KEM
+  fips_standard: 1
+  name_group: mlkem768
+  nid: '65070'
+  iana: true
+  oid: 2.16.840.1.101.3.4.4.2
+  nid_hybrid: '65071'
+  oqs_alg: OQS_KEM_alg_ml_kem_768
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65072'
+    - hybrid_group: x448
+      nid: '65073'
+    - hybrid_group: secp521_r1
+      nid: '65074'
+    - hybrid_group: secp384_r1
+      nid: '65075'
+    - hybrid_group: secp256_r1
+      nid: '65076'
+- family: ML-KEM
+  fips_standard: 1
+  name_group: mlkem1024
+  nid: '65080'
+  iana: true
+  oid: 2.16.840.1.101.3.4.4.3
+  nid_hybrid: '65081'
+  oqs_alg: OQS_KEM_alg_ml_kem_1024
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65082'
+    - hybrid_group: x448
+      nid: '65083'
+    - hybrid_group: secp521_r1
+      nid: '65084'
+    - hybrid_group: secp384_r1
+      nid: '65085'
+    - hybrid_group: secp256_r1
+      nid: '65086'
+- family: BIKE
+  name_group: bikel1
+  implementation_version: '5.1'
+  nid: '65090'
+  nid_hybrid: '65091'
+  oqs_alg: OQS_KEM_alg_bike_l1
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65092'
+    - hybrid_group: x448
+      nid: '65093'
+    - hybrid_group: secp521_r1
+      nid: '65094'
+    - hybrid_group: secp384_r1
+      nid: '65095'
+    - hybrid_group: secp256_r1
+      nid: '65096'
+- family: BIKE
+  name_group: bikel3
+  implementation_version: '5.1'
+  nid: '65100'
+  nid_hybrid: '65101'
+  oqs_alg: OQS_KEM_alg_bike_l3
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65102'
+    - hybrid_group: x448
+      nid: '65103'
+    - hybrid_group: secp521_r1
+      nid: '65104'
+    - hybrid_group: secp384_r1
+      nid: '65105'
+    - hybrid_group: secp256_r1
+      nid: '65106'
+- family: BIKE
+  name_group: bikel5
+  implementation_version: '5.1'
+  nid: '65110'
+  nid_hybrid: '65111'
+  oqs_alg: OQS_KEM_alg_bike_l5
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65112'
+    - hybrid_group: x448
+      nid: '65113'
+    - hybrid_group: secp521_r1
+      nid: '65114'
+    - hybrid_group: secp384_r1
+      nid: '65115'
+    - hybrid_group: secp256_r1
+      nid: '65116'
+- family: HQC
+  name_group: hqc128
+  nid: '65120'
+  nid_hybrid: '65121'
+  oqs_alg: OQS_KEM_alg_hqc_128
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65122'
+    - hybrid_group: x448
+      nid: '65123'
+    - hybrid_group: secp521_r1
+      nid: '65124'
+    - hybrid_group: secp384_r1
+      nid: '65125'
+    - hybrid_group: secp256_r1
+      nid: '65126'
+- family: HQC
+  name_group: hqc192
+  nid: '65130'
+  nid_hybrid: '65131'
+  oqs_alg: OQS_KEM_alg_hqc_192
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65132'
+    - hybrid_group: x448
+      nid: '65133'
+    - hybrid_group: secp521_r1
+      nid: '65134'
+    - hybrid_group: secp384_r1
+      nid: '65135'
+    - hybrid_group: secp256_r1
+      nid: '65136'
+- family: HQC
+  name_group: hqc256
+  nid: '65140'
+  nid_hybrid: '65141'
+  oqs_alg: OQS_KEM_alg_hqc_256
+  enable_kem: true
+  extra_nids:
+    current:
+    - hybrid_group: x25519
+      nid: '65142'
+    - hybrid_group: x448
+      nid: '65143'
+    - hybrid_group: secp521_r1
+      nid: '65144'
+    - hybrid_group: secp384_r1
+      nid: '65145'
+    - hybrid_group: secp256_r1
+      nid: '65146'
 
 kem_nid_end: '0x0250'
 kem_nid_hybrid_end: '0x2FFF'
-# need to edit ssl_local.h macros IS_OQS_KEM_CURVEID and IS_OQS_KEM_HYBRID_CURVEID with the above _end values
 
-# Next free signature ID: 0xff53
 sigs:
   # -
     # iso (1)

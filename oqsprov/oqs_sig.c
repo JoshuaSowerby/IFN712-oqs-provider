@@ -590,7 +590,7 @@ int oqs_sig_digest_sign_final(void *vpoqs_sigctx, unsigned char *sig,
     }
 
     poqs_sigctx->flag_allow_md = 1;
-
+    //TO TIME
     if (poqs_sigctx->mdctx != NULL)
         return oqs_sig_sign(vpoqs_sigctx, sig, siglen, sigsize, digest,
                             (size_t)dlen);
@@ -610,6 +610,7 @@ int oqs_sig_digest_verify_final(void *vpoqs_sigctx, const unsigned char *sig,
         return 0;
 
     // TBC for hybrids:
+    //TO TIME
     if (poqs_sigctx->mdctx) {
         if (!EVP_DigestFinal_ex(poqs_sigctx->mdctx, digest, &dlen))
             return 0;
