@@ -161,7 +161,7 @@ static int oqs_qs_kem_encaps_keyslot(void *vpkemctx, unsigned char *out,
     clock_gettime(CLOCK_MONOTONIC, &end);
         _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
-    printf("%s encaps time: %ld ns",kem_ctx->method_name, _elapsed_ns);
+    printf("%s encaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
     fflush(stdout);
     return OQS_SUCCESS == ret_status;
 }
@@ -221,7 +221,7 @@ static int oqs_qs_kem_decaps_keyslot(void *vpkemctx, unsigned char *out,
     clock_gettime(CLOCK_MONOTONIC, &end);
         _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
-    printf("%s decaps time: %ld ns",kem_ctx->method_name, _elapsed_ns);
+    printf("%s decaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
     fflush(stdout);
     return OQS_SUCCESS == ret_status;
 }

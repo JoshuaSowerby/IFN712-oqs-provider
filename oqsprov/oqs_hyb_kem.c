@@ -91,7 +91,7 @@ static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
     _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    printf("%s encaps time: %ld ns",_evp_name ? _evp_name : "unknown", _elapsed_ns);
+    printf("%s encaps time: %ldns\n",_evp_name ? _evp_name : "unknown", _elapsed_ns);
     fflush(stdout);
 err:
     EVP_PKEY_CTX_free(ctx);
@@ -168,7 +168,7 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
     _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    printf("%s decaps time: %ld ns",_evp_name ? _evp_name : "unknown", _elapsed_ns);
+    printf("%s decaps time: %ldns\n",_evp_name ? _evp_name : "unknown", _elapsed_ns);
     fflush(stdout);
 err:
     EVP_PKEY_free(peerpkey);
