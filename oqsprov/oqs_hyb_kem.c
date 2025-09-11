@@ -242,7 +242,7 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
     const char *pq_name = qs_ctx->method_name;
-    printf("%s_%encaps time: %ldns\n",
+    printf("%s_%s encaps time: %ldns\n",
         _evp_name ? _evp_name : "unknown",
         pq_name ? pq_name : "unknown",
         _elapsed_ns);
@@ -318,7 +318,7 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
     const char *pq_name = qs_ctx->method_name;
-    printf("%s_%sdecaps time: %ldns\n",
+    printf("%s_%s decaps time: %ldns\n",
         _evp_name ? _evp_name : "unknown",
         pq_name ? pq_name : "unknown",
         _elapsed_ns);
