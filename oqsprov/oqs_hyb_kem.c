@@ -187,6 +187,11 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
     size_t secretLenClassical = 0, secretLenPQ = 0;
     size_t ctLenClassical = 0, ctLenPQ = 0;
     unsigned char *ctClassical, *ctPQ, *secretClassical, *secretPQ;
+    //timing init
+    struct timespec start, end;
+    long _elapsed_ns = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    //end of time init
 
     ret = oqs_evp_kem_encaps_keyslot(vpkemctx, NULL, &ctLenClassical, NULL,
                                      &secretLenClassical,
@@ -231,6 +236,17 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
                                     &secretLenPQ,
                                     oqsx_key->reverse_share ? 0 : 1);
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
+    //timing end
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
+                 (end.tv_nsec - start.tv_nsec);
+    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    const char *pq_name = qs_ctx->method_name;
+    printf("%s_%encaps time: %ldns\n",
+        _evp_name ? _evp_name : "unknown",
+        pq_name ? pq_name : "unknown",
+        _elapsed_ns);
+    fflush(stdout);
 
 err:
     return ret;
@@ -249,7 +265,12 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
     size_t ctLenClassical = 0, ctLenPQ = 0;
     const unsigned char *ctClassical, *ctPQ;
     unsigned char *secretClassical, *secretPQ;
-
+    //timing init
+    struct timespec start, end;
+    long _elapsed_ns = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    //end of time init
+    
     ret = oqs_evp_kem_decaps_keyslot(vpkemctx, NULL, &secretLenClassical, NULL,
                                      0, oqsx_key->reverse_share ? 1 : 0);
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
@@ -290,6 +311,18 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
     ret = oqs_qs_kem_decaps_keyslot(vpkemctx, secretPQ, &secretLenPQ, ctPQ,
                                     ctLenPQ, oqsx_key->reverse_share ? 0 : 1);
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
+
+    //timing end
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
+                 (end.tv_nsec - start.tv_nsec);
+    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    const char *pq_name = qs_ctx->method_name;
+    printf("%s_%sdecaps time: %ldns\n",
+        _evp_name ? _evp_name : "unknown",
+        pq_name ? pq_name : "unknown",
+        _elapsed_ns);
+    fflush(stdout);
 
 err:
     return ret;
