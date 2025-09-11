@@ -8,6 +8,9 @@
  * ToDo: Adding hybrid alg support; More testing with more key types.
  */
 
+#include <time.h>//
+#include <stdio.h>//
+
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/crypto.h>
@@ -159,7 +162,7 @@ static int oqs_qs_kem_encaps_keyslot(void *vpkemctx, unsigned char *out,
         _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
     printf("%s encaps time: %ld ns",kem_ctx->method_name, _elapsed_ns);
-
+    fflush(stdout);
     return OQS_SUCCESS == ret_status;
 }
 
@@ -219,7 +222,7 @@ static int oqs_qs_kem_decaps_keyslot(void *vpkemctx, unsigned char *out,
         _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
                  (end.tv_nsec - start.tv_nsec);
     printf("%s decaps time: %ld ns",kem_ctx->method_name, _elapsed_ns);
-    
+    fflush(stdout);
     return OQS_SUCCESS == ret_status;
 }
 

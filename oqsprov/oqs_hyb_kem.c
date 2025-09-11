@@ -6,8 +6,8 @@
  * Hybrid KEM code.
  *
  */
-#include <stdio.h>
-#include <time.h>
+#include <stdio.h>//
+#include <time.h>//
 
 static OSSL_FUNC_kem_encapsulate_fn oqs_hyb_kem_encaps;
 static OSSL_FUNC_kem_decapsulate_fn oqs_hyb_kem_decaps;
@@ -92,7 +92,7 @@ static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
     printf("%s encaps time: %ld ns",_evp_name ? _evp_name : "unknown", _elapsed_ns);
-
+    fflush(stdout);
 err:
     EVP_PKEY_CTX_free(ctx);
     EVP_PKEY_CTX_free(kgctx);
@@ -169,7 +169,7 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
                  (end.tv_nsec - start.tv_nsec);
     const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
     printf("%s decaps time: %ld ns",_evp_name ? _evp_name : "unknown", _elapsed_ns);
-
+    fflush(stdout);
 err:
     EVP_PKEY_free(peerpkey);
     EVP_PKEY_free(pkey);
