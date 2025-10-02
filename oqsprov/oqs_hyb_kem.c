@@ -17,11 +17,7 @@ static OSSL_FUNC_kem_decapsulate_fn oqs_hyb_kem_decaps;
 static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
                                       size_t *ctlen, unsigned char *secret,
                                       size_t *secretlen, int keyslot) {
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    //end of time init
+
     int ret = OQS_SUCCESS, ret2 = 0;
 
     const PROV_OQSKEM_CTX *pkemctx = (PROV_OQSKEM_CTX *)vpkemctx;
@@ -86,13 +82,6 @@ static int oqs_evp_kem_encaps_keyslot(void *vpkemctx, unsigned char *ct,
 
     memcpy(ct, ctkex_encoded, pkeylen);
 
-    //timing end
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    printf("%s encaps time: %ldns\n",_evp_name ? _evp_name : "unknown", _elapsed_ns);
-    fflush(stdout);
 err:
     EVP_PKEY_CTX_free(ctx);
     EVP_PKEY_CTX_free(kgctx);
@@ -106,11 +95,7 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
                                       size_t *secretlen,
                                       const unsigned char *ct, size_t ctlen,
                                       int keyslot) {
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    //end of time init
+
     OQS_KEM_PRINTF("OQS KEM provider called: oqs_hyb_kem_decaps\n");
 
     int ret = OQS_SUCCESS, ret2 = 0;
@@ -163,13 +148,7 @@ static int oqs_evp_kem_decaps_keyslot(void *vpkemctx, unsigned char *secret,
     ret = EVP_PKEY_derive(ctx, secret, &kexDeriveLen);
     ON_ERR_SET_GOTO(ret <= 0, ret, -9, err);
 
-    //timing end
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    printf("%s decaps time: %ldns\n",_evp_name ? _evp_name : "unknown", _elapsed_ns);
-    fflush(stdout);
+    
 err:
     EVP_PKEY_free(peerpkey);
     EVP_PKEY_free(pkey);
@@ -181,17 +160,19 @@ err:
 
 static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
                               unsigned char *secret, size_t *secretlen) {
+    //init timer
+    struct timespec start_hybrid, end_hybrid, start_classical, end_classical, start_pq, end_pq;
+    long _elapsed_ns_hybrid, _elapsed_ns_classical, _elapsed_ns_pq = 0;
+    //start hybrid timer
+    clock_gettime(CLOCK_MONOTONIC, &start_hybrid);
+    //
     int ret = OQS_SUCCESS;
     const PROV_OQSKEM_CTX *pkemctx = (PROV_OQSKEM_CTX *)vpkemctx;
     const OQSX_KEY *oqsx_key = pkemctx->kem;
     size_t secretLenClassical = 0, secretLenPQ = 0;
     size_t ctLenClassical = 0, ctLenPQ = 0;
     unsigned char *ctClassical, *ctPQ, *secretClassical, *secretPQ;
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    //end of time init
+
 
     // think I should time these, or the second one... why are there 2?
     //this one just gets ct and secret lengths I think...
@@ -237,30 +218,47 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
     }
 
     ///THe second one. will generate ct and secret
+    //start classical timer
+    clock_gettime(CLOCK_MONOTONIC, &start_classical);
     ret = oqs_evp_kem_encaps_keyslot(vpkemctx, ctClassical, &ctLenClassical,
                                      secretClassical, &secretLenClassical,
                                      oqsx_key->reverse_share ? 1 : 0);
+    //end classical timer
+    clock_gettime(CLOCK_MONOTONIC, &end_classical);
+    //
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
-
+    //start pq timer
+    clock_gettime(CLOCK_MONOTONIC, &start_pq);
     ret = oqs_qs_kem_encaps_keyslot(vpkemctx, ctPQ, &ctLenPQ, secretPQ,
                                     &secretLenPQ,
                                     oqsx_key->reverse_share ? 0 : 1);
+    //end pq timer
+    clock_gettime(CLOCK_MONOTONIC, &end_pq);
+    //
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
-    //timing end
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    const OQSX_EVP_CTX *evp_ctx = pkemctx->kem->oqsx_provider_ctx.oqsx_evp_ctx;
-    const OQS_KEM *qs_ctx = pkemctx->kem->oqsx_provider_ctx.oqsx_qs_ctx.kem;
-
-    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    const char *pq_name = qs_ctx->method_name;
-    printf("%s_%s encaps time: %ldns\n",
-        _evp_name ? _evp_name : "unknown",
-        pq_name ? pq_name : "unknown",
-        _elapsed_ns);
+    //end hybrid timer
+    clock_gettime(CLOCK_MONOTONIC, &end_hybrid);
+    //calc elapsed time
+    _elapsed_ns_hybrid = (end_hybrid.tv_sec - start_hybrid.tv_sec) * 1000000000L + (end_hybrid.tv_nsec - start_hybrid.tv_nsec);
+    _elapsed_ns_classical = (end_classical.tv_sec - start_classical.tv_sec) * 1000000000L + (end_classical.tv_nsec - start_classical.tv_nsec);
+    _elapsed_ns_pq = (end_pq.tv_sec - start_pq.tv_sec) * 1000000000L + (end_pq.tv_nsec - start_pq.tv_nsec);
+    //get names
+    const char *classical_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    const char *pq_name = pkemctx->kem->oqsx_provider_ctx.oqsx_qs_ctx.kem->method_name;
+    //print
+    printf("enc classical (%s) total: %ldns\n",
+       classical_name ? classical_name : "unknown",
+       _elapsed_ns_classical);
     fflush(stdout);
-
+    printf("enc pq (%s) total: %ldns\n",
+        pq_name ? pq_name : "unknown",
+        _elapsed_ns_pq);
+    fflush(stdout);
+    printf("enc hybrid (%s + %s) total: %ldns\n",
+        classical_name ? classical_name : "unknown",
+        pq_name ? pq_name : "unknown",
+        _elapsed_ns_hybrid);
+    fflush(stdout);
 err:
     return ret;
 }
@@ -268,6 +266,12 @@ err:
 static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
                               size_t *secretlen, const unsigned char *ct,
                               size_t ctlen) {
+    //init timer
+    struct timespec start_hybrid, end_hybrid, start_classical, end_classical, start_pq, end_pq;
+    long _elapsed_ns_hybrid, _elapsed_ns_classical, _elapsed_ns_pq = 0;
+    //start hybrid timer
+    clock_gettime(CLOCK_MONOTONIC, &start_hybrid);
+    //
     int ret = OQS_SUCCESS;
     const PROV_OQSKEM_CTX *pkemctx = (PROV_OQSKEM_CTX *)vpkemctx;
     const OQSX_KEY *oqsx_key = pkemctx->kem;
@@ -278,11 +282,6 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
     size_t ctLenClassical = 0, ctLenPQ = 0;
     const unsigned char *ctClassical, *ctPQ;
     unsigned char *secretClassical, *secretPQ;
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    //end of time init
     
     ///should I time these 2 instead? why are there 2? see below
     ret = oqs_evp_kem_decaps_keyslot(vpkemctx, NULL, &secretLenClassical, NULL,
@@ -318,26 +317,47 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
         secretPQ = secret + secretLenClassical;
     }
     /// THis is what I'm talking about. should I time this one instead?
+    // start classical timer
+    clock_gettime(CLOCK_MONOTONIC, &start_classical);
     ret = oqs_evp_kem_decaps_keyslot(
         vpkemctx, secretClassical, &secretLenClassical, ctClassical,
         ctLenClassical, oqsx_key->reverse_share ? 1 : 0);
+    //end classical timer
+    clock_gettime(CLOCK_MONOTONIC, &end_classical);
+    //
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
+    //start pq timer
+    clock_gettime(CLOCK_MONOTONIC, &start_pq);
     ret = oqs_qs_kem_decaps_keyslot(vpkemctx, secretPQ, &secretLenPQ, ctPQ,
                                     ctLenPQ, oqsx_key->reverse_share ? 0 : 1);
+    //end pq timer
+    clock_gettime(CLOCK_MONOTONIC, &end_pq);
+    //
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
 
     //THis is the point at which I can get ct and secret lengths I think...
-
-    //timing end
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    const char *_evp_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
-    const char *pq_name = qs_ctx->method_name;
-    printf("%s_%s decaps time: %ldns\n",
-        _evp_name ? _evp_name : "unknown",
+    //end hybrid timer
+    clock_gettime(CLOCK_MONOTONIC, &end_hybrid);
+    //calc elapsed time
+    _elapsed_ns_hybrid = (end_hybrid.tv_sec - start_hybrid.tv_sec) * 1000000000L + (end_hybrid.tv_nsec - start_hybrid.tv_nsec);
+    _elapsed_ns_classical = (end_classical.tv_sec - start_classical.tv_sec) * 1000000000L + (end_classical.tv_nsec - start_classical.tv_nsec);
+    _elapsed_ns_pq = (end_pq.tv_sec - start_pq.tv_sec) * 1000000000L + (end_pq.tv_nsec - start_pq.tv_nsec);
+    //get names
+    const char *classical_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
+    const char *pq_name = pkemctx->kem->oqsx_provider_ctx.oqsx_qs_ctx.kem->method_name;
+    //print
+    printf("dec classical (%s) total: %ldns\n",
+       classical_name ? classical_name : "unknown",
+       _elapsed_ns_classical);
+    fflush(stdout);
+    printf("dec pq (%s) total: %ldns\n",
         pq_name ? pq_name : "unknown",
-        _elapsed_ns);
+        _elapsed_ns_pq);
+    fflush(stdout);
+    printf("dec hybrid (%s + %s) total: %ldns\n",
+        classical_name ? classical_name : "unknown",
+        pq_name ? pq_name : "unknown",
+        _elapsed_ns_hybrid);
     fflush(stdout);
 
 err:

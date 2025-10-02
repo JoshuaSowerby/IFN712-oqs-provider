@@ -149,21 +149,10 @@ static int oqs_qs_kem_encaps_keyslot(void *vpkemctx, unsigned char *out,
     *outlen = kem_ctx->length_ciphertext;
     *secretlen = kem_ctx->length_shared_secret;
 
-    //TO TIME
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    
 
     int ret_status = OQS_KEM_encaps(kem_ctx, out, secret,
                                          pkemctx->kem->comp_pubkey[keyslot]);
-    clock_gettime(CLOCK_MONOTONIC, &end);
-        _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    printf("%s encaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
-    fflush(stdout);
-    //End of timing
+
     return OQS_SUCCESS == ret_status;
 }
 
@@ -210,21 +199,9 @@ static int oqs_qs_kem_decaps_keyslot(void *vpkemctx, unsigned char *out,
     }
     *outlen = kem_ctx->length_shared_secret;
 
-    //TO TIME
-    //timing init
-    struct timespec start, end;
-    long _elapsed_ns = 0;
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    
-
     int ret_status = OQS_KEM_decaps(kem_ctx, out, in,
                                          pkemctx->kem->comp_privkey[keyslot]);
-    clock_gettime(CLOCK_MONOTONIC, &end);
-        _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
-                 (end.tv_nsec - start.tv_nsec);
-    printf("%s decaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
-    fflush(stdout);
-    //end of timing
+
     return OQS_SUCCESS == ret_status;
 }
 
