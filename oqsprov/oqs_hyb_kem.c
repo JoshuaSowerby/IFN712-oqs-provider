@@ -193,6 +193,9 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
     clock_gettime(CLOCK_MONOTONIC, &start);
     //end of time init
 
+    // think I should time these, or the second one... why are there 2?
+    //this one just gets ct and secret lengths I think...
+    //apparently just  query for ct and secret lengths
     ret = oqs_evp_kem_encaps_keyslot(vpkemctx, NULL, &ctLenClassical, NULL,
                                      &secretLenClassical,
                                      oqsx_key->reverse_share ? 1 : 0);
@@ -215,9 +218,15 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
        but the PQ algorithm is: PQ share comes first
        otherwise: classical share comes first
      */
-    if (oqsx_key->reverse_share) {
-        ctPQ = ct;
-        ctClassical = ct + ctLenPQ;
+    // ciphertext (ct) and secret defined.
+    if (oqsx_key->reverse_share) {//just defines if classical or pq is first
+        ctPQ = ct;//start of buffer
+        ctClassical = ct + ctLenPQ;//start of classical secton of buffer
+        /*
+        [   0   1   2   3   4   5   6]
+           |ct         |ctLenPQ------|
+           |PQct-------|classical ct-|
+        */
         secretPQ = secret;
         secretClassical = secret + secretLenPQ;
     } else {
@@ -227,6 +236,7 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
         secretPQ = secret + secretLenClassical;
     }
 
+    ///THe second one. will generate ct and secret
     ret = oqs_evp_kem_encaps_keyslot(vpkemctx, ctClassical, &ctLenClassical,
                                      secretClassical, &secretLenClassical,
                                      oqsx_key->reverse_share ? 1 : 0);
@@ -274,6 +284,7 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
     clock_gettime(CLOCK_MONOTONIC, &start);
     //end of time init
     
+    ///should I time these 2 instead? why are there 2? see below
     ret = oqs_evp_kem_decaps_keyslot(vpkemctx, NULL, &secretLenClassical, NULL,
                                      0, oqsx_key->reverse_share ? 1 : 0);
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
@@ -306,7 +317,7 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
         secretClassical = secret;
         secretPQ = secret + secretLenClassical;
     }
-
+    /// THis is what I'm talking about. should I time this one instead?
     ret = oqs_evp_kem_decaps_keyslot(
         vpkemctx, secretClassical, &secretLenClassical, ctClassical,
         ctLenClassical, oqsx_key->reverse_share ? 1 : 0);
@@ -314,6 +325,8 @@ static int oqs_hyb_kem_decaps(void *vpkemctx, unsigned char *secret,
     ret = oqs_qs_kem_decaps_keyslot(vpkemctx, secretPQ, &secretLenPQ, ctPQ,
                                     ctLenPQ, oqsx_key->reverse_share ? 0 : 1);
     ON_ERR_SET_GOTO(ret <= 0, ret, OQS_ERROR, err);
+
+    //THis is the point at which I can get ct and secret lengths I think...
 
     //timing end
     clock_gettime(CLOCK_MONOTONIC, &end);

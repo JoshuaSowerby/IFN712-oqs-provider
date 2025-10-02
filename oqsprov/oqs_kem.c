@@ -163,6 +163,7 @@ static int oqs_qs_kem_encaps_keyslot(void *vpkemctx, unsigned char *out,
                  (end.tv_nsec - start.tv_nsec);
     printf("%s encaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
     fflush(stdout);
+    //End of timing
     return OQS_SUCCESS == ret_status;
 }
 
@@ -223,6 +224,7 @@ static int oqs_qs_kem_decaps_keyslot(void *vpkemctx, unsigned char *out,
                  (end.tv_nsec - start.tv_nsec);
     printf("%s decaps time: %ldns\n",kem_ctx->method_name, _elapsed_ns);
     fflush(stdout);
+    //end of timing
     return OQS_SUCCESS == ret_status;
 }
 
@@ -260,5 +262,11 @@ static int oqs_qs_kem_decaps(void *vpkemctx, unsigned char *out, size_t *outlen,
         {0, NULL}};
 
 // keep this just in case we need to become ALG-specific at some point in time
+/*
+I believe that is is just telling OpenSSL what to use. e.g. 
+{OSSL_FUNC_KEM_ENCAPSULATE, (void (*)(void))oqs_hyb_kem_encaps}
+tells openssl that OSSL_FUNC_KEM_ENCAPSULATE should call oqs_hyb_kem_encaps
+or something
+*/
 MAKE_KEM_FUNCTIONS(generic)
 MAKE_HYB_KEM_FUNCTIONS(hybrid)
