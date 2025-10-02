@@ -243,6 +243,8 @@ static int oqs_hyb_kem_encaps(void *vpkemctx, unsigned char *ct, size_t *ctlen,
     _elapsed_ns_classical = (end_classical.tv_sec - start_classical.tv_sec) * 1000000000L + (end_classical.tv_nsec - start_classical.tv_nsec);
     _elapsed_ns_pq = (end_pq.tv_sec - start_pq.tv_sec) * 1000000000L + (end_pq.tv_nsec - start_pq.tv_nsec);
     //get names
+    const OQSX_EVP_CTX *evp_ctx = pkemctx->kem->oqsx_provider_ctx.oqsx_evp_ctx;
+    const OQS_KEM *qs_ctx = pkemctx->kem->oqsx_provider_ctx.oqsx_qs_ctx.kem;
     const char *classical_name = OBJ_nid2sn(evp_ctx->evp_info->keytype);
     const char *pq_name = pkemctx->kem->oqsx_provider_ctx.oqsx_qs_ctx.kem->method_name;
     //print
