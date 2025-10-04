@@ -1,5 +1,5 @@
 all_pq_kems=("frodo640shake" "frodo976shake" "frodo1344shake" "bikel1" "bikel3" "bikel5" "mlkem512" "mlkem768" "mlkem1024" "hqc128" "hqc192" "hqc256")
-all_cl_kems=("x25519" "x448" "secp256_r1_" "secp384_r1_" "secp521_r1_")
+all_cl_kems=("x25519" "x448" "secp256_r1" "secp384_r1" "secp521_r1")
 
 # Classical signature types
 all_cl_sigs=("rsa:3072" "ed25519" "ed448")
