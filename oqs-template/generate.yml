@@ -256,6 +256,26 @@ sigs:
                     'oid': '1.3.9999.7.6',
                     'code_point': '0xff07'}]
   -
+    family: 'Falcon'
+    variants:
+      -
+        name: 'falcon512'
+        pretty_name: 'Falcon-512'
+        oqs_meth: 'OQS_SIG_alg_falcon_512'
+        oid: '1.3.9999.3.11'
+        code_point: '0xfed7'
+        supported_encodings: ['draft-uni-qsckeys-falcon-00/sk-pk']
+        enable: true
+        enable_tls: true
+        mix_with: [{'name': 'p256',
+                    'pretty_name': 'ECDSA p256',
+                    'oid': '1.3.9999.3.12',
+                    'code_point': '0xfed8'},
+                   {'name': 'rsa3072',
+                    'pretty_name': 'RSA3072',
+                    'oid': '1.3.9999.3.13',
+                    'code_point': '0xfed9'}]
+  -
     family: 'SPHINCS-SHAKE'
     variants:
       -
@@ -294,34 +314,6 @@ sigs:
                     'pretty_name': 'RSA3072',
                     'oid': '1.3.9999.8.1.5',
                     'code_point': '0xff37'}]
-  -
-    family: 'CROSS'
-    variants:
-      # RSDP 128
-      -
-        name: 'CROSSrsdp128balanced'
-        pretty_name: 'CROSS-rsdp-128-balanced'
-        oqs_meth: 'OQS_SIG_alg_cross_rsdp_128_balanced'
-        oid: '1.3.6.1.4.1.62245.2.1.1.2'
-        code_point: '0xff22'
-        enable: true
-        enable_tls: true
-      -
-        name: 'CROSSrsdp128fast'
-        pretty_name: 'CROSS-rsdp-128-fast'
-        oqs_meth: 'OQS_SIG_alg_cross_rsdp_128_fast'
-        oid: '1.3.6.1.4.1.62245.2.1.2.2'
-        code_point: '0xff23'
-        enable: true
-        enable_tls: true
-      -
-        name: 'CROSSrsdp128small'
-        pretty_name: 'CROSS-rsdp-128-small'
-        oqs_meth: 'OQS_SIG_alg_cross_rsdp_128_small'
-        oid: '1.3.6.1.4.1.62245.2.1.3.2'
-        code_point: '0xff24'
-        enable: true
-        enable_tls: true
   -
     family: 'UOV'
     variants:
