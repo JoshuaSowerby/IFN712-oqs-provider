@@ -635,7 +635,7 @@ int oqs_sig_digest_verify_final(void *vpoqs_sigctx, const unsigned char *sig,
         printf("sigtotal: %ldns\n",_elapsed_ns);
         fflush(stdout);
         //
-        return ret
+        return ret;
     
     //calc elapsed time
     //print
@@ -652,7 +652,7 @@ int oqs_sig_digest_verify_final(void *vpoqs_sigctx, const unsigned char *sig,
         printf("sigtotal: %ldns\n",_elapsed_ns);
         fflush(stdout);
         //
-        return ret
+        return ret;
 }
 
 static void oqs_sig_freectx(void *vpoqs_sigctx) {
