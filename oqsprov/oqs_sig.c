@@ -6,6 +6,8 @@
  * Code strongly inspired by OpenSSL DSA signature provider.
  *
  */
+#include <stdio.h>//
+#include <time.h>//
 
 #include <openssl/asn1.h>
 #include <openssl/core_dispatch.h>
@@ -604,7 +606,12 @@ int oqs_sig_digest_verify_final(void *vpoqs_sigctx, const unsigned char *sig,
     PROV_OQSSIG_CTX *poqs_sigctx = (PROV_OQSSIG_CTX *)vpoqs_sigctx;
     unsigned char digest[EVP_MAX_MD_SIZE];
     unsigned int dlen = 0;
+    int ret = 0;
 
+    //init timer
+    struct timespec start, end;
+    long _elapsed_ns = 0;
+    //
     OQS_SIG_PRINTF("OQS SIG provider: digest_verify_final called\n");
     if (poqs_sigctx == NULL)
         return 0;
@@ -616,11 +623,36 @@ int oqs_sig_digest_verify_final(void *vpoqs_sigctx, const unsigned char *sig,
             return 0;
 
         poqs_sigctx->flag_allow_md = 1;
-
-        return oqs_sig_verify(vpoqs_sigctx, sig, siglen, digest, (size_t)dlen);
+        
+        //start  timer
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        //
+        ret= oqs_sig_verify(vpoqs_sigctx, sig, siglen, digest, (size_t)dlen);
+        
+        //end  timer
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec);
+        printf("sigtotal: %ldns\n",_elapsed_ns);
+        fflush(stdout);
+        //
+        return ret
+    
+    //calc elapsed time
+    //print
+    
     } else
-        return oqs_sig_verify(vpoqs_sigctx, sig, siglen, poqs_sigctx->mddata,
+        //start  timer
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        //
+        ret = oqs_sig_verify(vpoqs_sigctx, sig, siglen, poqs_sigctx->mddata,
                               poqs_sigctx->mdsize);
+        //end  timer
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        _elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec);
+        printf("sigtotal: %ldns\n",_elapsed_ns);
+        fflush(stdout);
+        //
+        return ret
 }
 
 static void oqs_sig_freectx(void *vpoqs_sigctx) {
